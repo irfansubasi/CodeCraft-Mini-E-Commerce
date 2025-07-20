@@ -146,6 +146,7 @@
     self.buildHTML();
     self.setEvents();
     self.initSwipers();
+    self.setCartStorage();
   };
 
   self.reset = () => {
@@ -369,12 +370,11 @@
               .product-card {
                 display: flex;
                 flex-direction: column;
-                justify-content: center;
+                justify-content: space-between;
                 align-items: center;
                 max-width: 250px;
-                max-height: 400px;
                 width: 100%;
-                height: 100%;
+                height: 500px;
                 border: #e5e5e5 solid 1px;
                 border-radius: 8px;
               }
@@ -382,9 +382,11 @@
               .product-image {
                 position: relative;
                 width: 100%;
-                height: 100%;
+                height: 250px;
                 border-radius: 8px 8px 0 0;
                 overflow: hidden;
+                flex-shrink: 0;
+                padding: 10px;
               }
 
               .product-image img {
@@ -392,6 +394,8 @@
                 object-fit: cover;
                 width: 100%;
                 height: 100%;
+                border: #e5e5e5 solid 1px;
+                border-radius: 10px;
               }
 
               .addfav-btn {
@@ -431,18 +435,29 @@
                 padding: 20px 15px;
                 border-radius: 0 0 8px 8px;
                 gap: 10px;
+                flex: 1;
+                justify-content: space-between;
               }
 
               .product-info {
                 display: flex;
                 flex-direction: column;
-                justify-content: center;
+                justify-content: flex-start;
                 gap: 10px;
+                flex: 1;
+                min-height: 120px;
               }
 
               .product-name {
                 font-size: 1rem;
                 font-weight: 600;
+                line-height: 1.3;
+                margin-bottom: 8px;
+                height: 60px;
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
               }
 
               .review {
@@ -825,171 +840,6 @@
                     </div>
                   </div>
                 </div>
-                <div class="${classes.swiperSlide}">
-                  <div class="${classes.productCard}">
-                    <div class="${classes.productImage}">
-                      <img src="https://picsum.photos/200/300" alt="" />
-                      <span class="${classes.badge}">New</span>
-                      <button class="${classes.addfavBtn}">
-                        <i class="fa-regular fa-heart"></i>
-                      </button>
-                    </div>
-                    <div class="${classes.productBody}">
-                      <div class="${classes.productInfo}">
-                        <p class="${classes.productName}">Library Stool Chair</p>
-                        <div class="${classes.review}">
-                          <div class="${classes.stars}">
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                          </div>
-                          <span>(50)</span>
-                        </div>
-
-                        <p class="${classes.productPrice}">$20</p>
-                      </div>
-
-                      <button class="${classes.addcartBtn}">
-                        <i class="fa-solid fa-cart-plus"></i>
-                        <span>Add to Cart</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div class="${classes.swiperSlide}">
-                  <div class="${classes.productCard}">
-                    <div class="${classes.productImage}">
-                      <img src="https://picsum.photos/200/300" alt="" />
-                      <span class="${classes.badge}">New</span>
-                      <button class="${classes.addfavBtn}">
-                        <i class="fa-regular fa-heart"></i>
-                      </button>
-                    </div>
-                    <div class="${classes.productBody}">
-                      <div class="${classes.productInfo}">
-                        <p class="${classes.productName}">Library Stool Chair</p>
-                        <div class="${classes.review}">
-                          <div class="${classes.stars}">
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                          </div>
-                          <span>(50)</span>
-                        </div>
-
-                        <p class="${classes.productPrice}">$20</p>
-                      </div>
-
-                      <button class="${classes.addcartBtn}">
-                        <i class="fa-solid fa-cart-plus"></i>
-                        <span>Add to Cart</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div class="${classes.swiperSlide}">
-                  <div class="${classes.productCard}">
-                    <div class="${classes.productImage}">
-                      <img src="https://picsum.photos/200/300" alt="" />
-                      <span class="${classes.badge}">New</span>
-                      <button class="${classes.addfavBtn}">
-                        <i class="fa-regular fa-heart"></i>
-                      </button>
-                    </div>
-                    <div class="${classes.productBody}">
-                      <div class="${classes.productInfo}">
-                        <p class="${classes.productName}">Library Stool Chair</p>
-                        <div class="${classes.review}">
-                          <div class="${classes.stars}">
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                          </div>
-                          <span>(50)</span>
-                        </div>
-
-                        <p class="${classes.productPrice}">$20</p>
-                      </div>
-
-                      <button class="${classes.addcartBtn}">
-                        <i class="fa-solid fa-cart-plus"></i>
-                        <span>Add to Cart</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div class="${classes.swiperSlide}">
-                  <div class="${classes.productCard}">
-                    <div class="${classes.productImage}">
-                      <img src="https://picsum.photos/200/300" alt="" />
-                      <span class="${classes.badge}">New</span>
-                      <button class="${classes.addfavBtn}">
-                        <i class="fa-regular fa-heart"></i>
-                      </button>
-                    </div>
-                    <div class="${classes.productBody}">
-                      <div class="${classes.productInfo}">
-                        <p class="${classes.productName}">Library Stool Chair</p>
-                        <div class="${classes.review}">
-                          <div class="${classes.stars}">
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                          </div>
-                          <span>(50)</span>
-                        </div>
-
-                        <p class="${classes.productPrice}">$20</p>
-                      </div>
-
-                      <button class="${classes.addcartBtn}">
-                        <i class="fa-solid fa-cart-plus"></i>
-                        <span>Add to Cart</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div class="${classes.swiperSlide}">
-                  <div class="${classes.productCard}">
-                    <div class="${classes.productImage}">
-                      <img src="https://picsum.photos/200/300" alt="" />
-                      <span class="${classes.badge}">New</span>
-                      <button class="${classes.addfavBtn}">
-                        <i class="fa-regular fa-heart"></i>
-                      </button>
-                    </div>
-                    <div class="${classes.productBody}">
-                      <div class="${classes.productInfo}">
-                        <p class="${classes.productName}">Library Stool Chair</p>
-                        <div class="${classes.review}">
-                          <div class="${classes.stars}">
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                          </div>
-                          <span>(50)</span>
-                        </div>
-
-                        <p class="${classes.productPrice}">$20</p>
-                      </div>
-
-                      <button class="${classes.addcartBtn}">
-                        <i class="fa-solid fa-cart-plus"></i>
-                        <span>Add to Cart</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -1010,192 +860,7 @@
             </nav>
 
             <div id="productList" class="${classes.productList}">
-              <div class="${classes.productCard}">
-                <div class="${classes.productImage}">
-                  <img src="https://picsum.photos/200/300" alt="" />
-                  <span class="${classes.badge}">New</span>
-                  <button class="${classes.addfavBtn}">
-                    <i class="fa-regular fa-heart"></i>
-                  </button>
-                </div>
-                <div class="${classes.productBody}">
-                  <div class="${classes.productInfo}">
-                    <p class="${classes.productName}">Library Stool Chair</p>
-                    <div class="${classes.review}">
-                      <div class="${classes.stars}">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                      </div>
-                      <span>(50)</span>
-                    </div>
-
-                    <p class="${classes.productPrice}">$20</p>
-                  </div>
-
-                  <button class="${classes.addcartBtn}">
-                    <i class="fa-solid fa-cart-plus"></i>
-                    <span>Add to Cart</span>
-                  </button>
-                </div>
-              </div>
-              <div class="${classes.productCard}">
-                <div class="${classes.productImage}">
-                  <img src="https://picsum.photos/200/300" alt="" />
-                  <span class="${classes.badge}">New</span>
-                  <button class="${classes.addfavBtn}">
-                    <i class="fa-regular fa-heart"></i>
-                  </button>
-                </div>
-                <div class="${classes.productBody}">
-                  <div class="${classes.productInfo}">
-                    <p class="${classes.productName}">Library Stool Chair</p>
-                    <div class="${classes.review}">
-                      <div class="${classes.stars}">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                      </div>
-                      <span>(50)</span>
-                    </div>
-
-                    <p class="${classes.productPrice}">$20</p>
-                  </div>
-
-                  <button class="${classes.addcartBtn}">
-                    <i class="fa-solid fa-cart-plus"></i>
-                    <span>Add to Cart</span>
-                  </button>
-                </div>
-              </div>
-              <div class="${classes.productCard}">
-                <div class="${classes.productImage}">
-                  <img src="https://picsum.photos/200/300" alt="" />
-                  <span class="${classes.badge}">New</span>
-                  <button class="${classes.addfavBtn}">
-                    <i class="fa-regular fa-heart"></i>
-                  </button>
-                </div>
-                <div class="${classes.productBody}">
-                  <div class="${classes.productInfo}">
-                    <p class="${classes.productName}">Library Stool Chair</p>
-                    <div class="${classes.review}">
-                      <div class="${classes.stars}">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                      </div>
-                      <span>(50)</span>
-                    </div>
-
-                    <p class="${classes.productPrice}">$20</p>
-                  </div>
-
-                  <button class="${classes.addcartBtn}">
-                    <i class="fa-solid fa-cart-plus"></i>
-                    <span>Add to Cart</span>
-                  </button>
-                </div>
-              </div>
-              <div class="${classes.productCard}">
-                <div class="${classes.productImage}">
-                  <img src="https://picsum.photos/200/300" alt="" />
-                  <span class="${classes.badge}">New</span>
-                  <button class="${classes.addfavBtn}">
-                    <i class="fa-regular fa-heart"></i>
-                  </button>
-                </div>
-                <div class="${classes.productBody}">
-                  <div class="${classes.productInfo}">
-                    <p class="${classes.productName}">Library Stool Chair</p>
-                    <div class="${classes.review}">
-                      <div class="${classes.stars}">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                      </div>
-                      <span>(50)</span>
-                    </div>
-
-                    <p class="${classes.productPrice}">$20</p>
-                  </div>
-
-                  <button class="${classes.addcartBtn}">
-                    <i class="fa-solid fa-cart-plus"></i>
-                    <span>Add to Cart</span>
-                  </button>
-                </div>
-              </div>
-              <div class="${classes.productCard}">
-                <div class="${classes.productImage}">
-                  <img src="https://picsum.photos/200/300" alt="" />
-                  <span class="${classes.badge}">New</span>
-                  <button class="${classes.addfavBtn}">
-                    <i class="fa-regular fa-heart"></i>
-                  </button>
-                </div>
-                <div class="${classes.productBody}">
-                  <div class="${classes.productInfo}">
-                    <p class="${classes.productName}">Library Stool Chair</p>
-                    <div class="${classes.review}">
-                      <div class="${classes.stars}">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                      </div>
-                      <span>(50)</span>
-                    </div>
-
-                    <p class="${classes.productPrice}">$20</p>
-                  </div>
-
-                  <button class="${classes.addcartBtn}">
-                    <i class="fa-solid fa-cart-plus"></i>
-                    <span>Add to Cart</span>
-                  </button>
-                </div>
-              </div>
-              <div class="${classes.productCard}">
-                <div class="${classes.productImage}">
-                  <img src="https://picsum.photos/200/300" alt="" />
-                  <span class="${classes.badge}">New</span>
-                  <button class="${classes.addfavBtn}">
-                    <i class="fa-regular fa-heart"></i>
-                  </button>
-                </div>
-                <div class="${classes.productBody}">
-                  <div class="${classes.productInfo}">
-                    <p class="${classes.productName}">Library Stool Chair</p>
-                    <div class="${classes.review}">
-                      <div class="${classes.stars}">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                      </div>
-                      <span>(50)</span>
-                    </div>
-
-                    <p class="${classes.productPrice}">$20</p>
-                  </div>
-
-                  <button class="${classes.addcartBtn}">
-                    <i class="fa-solid fa-cart-plus"></i>
-                    <span>Add to Cart</span>
-                  </button>
-                </div>
-              </div>
+              <!--ürünler buraya gelecek-->
             </div>
           </div>
         </div>
@@ -1458,10 +1123,71 @@
   // Event listeners
   self.setEvents = () => {
     // Favorite cart event, etc.
+
+    //hover
+    $(
+      `.${classes.cart}, .${classes.favs}, .${classes.addcartBtn}, .${classes.addfavBtn}, .${classes.contact} a, .${classes.swiperButtonNext}, .${classes.swiperButtonPrev}`
+    )
+      .mouseenter(function () {
+        $(this).addClass('hover-effect');
+      })
+      .mouseleave(function () {
+        $(this).removeClass('hover-effect');
+      });
   };
 
   // Extra functions (localStorage, api requests, etc.)
-  self.setCartStorage = () => {};
+  self.setCartStorage = () => {
+    $(document).ready(function () {
+      //AJAX product api get
+      $.ajax({
+        url: 'https://fakestoreapi.com/products',
+        method: 'GET',
+        dataType: 'json',
+      })
+        .done(function (datas) {
+          datas.forEach((data) => {
+            const productCard = `
+          <div class="${classes.productCard}">
+            <div class="${classes.productImage}">
+              <img src="${data.image}" alt="" />
+              <span class="${classes.badge}">New</span>
+              <button class="${classes.addfavBtn}">
+                <i class="fa-regular fa-heart"></i>
+              </button>
+            </div>
+            <div class="${classes.productBody}">
+              <div class="${classes.productInfo}">
+                <p class="${classes.productName}">${data.title}</p>
+                <div class="${classes.review}">
+                  <div class="${classes.stars}">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                  </div>
+                  <span>(${data.rating.count})</span>
+                </div>
+
+                <p class="${classes.productPrice}">${data.price} ₺</p>
+              </div>
+
+              <button class="${classes.addcartBtn}">
+                <i class="fa-solid fa-cart-plus"></i>
+                <span>Add to Cart</span>
+              </button>
+            </div>
+            </div>`;
+
+            $('#productList').append(productCard);
+          });
+        })
+        .fail(function (xhr, status, error) {
+          console.log(xhr, status, error);
+        });
+    });
+  };
 
   self.setFavoritesStorage = () => {};
 
