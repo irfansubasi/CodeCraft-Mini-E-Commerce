@@ -173,6 +173,14 @@
                 font-size: 1.2rem
               }
 
+              #container header{
+                position: sticky;
+                top: 0;
+                width: 100%;
+                z-index: 3;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+              }
+
               .container {
                 width: 100%;
                 max-width: 1140px;
