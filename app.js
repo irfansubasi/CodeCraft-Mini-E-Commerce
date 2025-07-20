@@ -66,6 +66,9 @@
     cartPanelHeader: 'cart-panel-header',
     cartCloseBtn: 'cart-close-btn',
     cartPanelContent: 'cart-panel-content',
+    cartDropdown: 'cart-dropdown',
+    cartDropdownHeader: 'cart-dropdown-header',
+    cartDropdownContent: 'cart-dropdown-content',
   };
 
   const selectors = {
@@ -133,6 +136,9 @@
     cartPanelHeader: `.${classes.cartPanelHeader}`,
     cartCloseBtn: `.${classes.cartCloseBtn}`,
     cartPanelContent: `.${classes.cartPanelContent}`,
+    cartDropdown: `.${classes.cartDropdown}`,
+    cartDropdownHeader: `.${classes.cartDropdownHeader}`,
+    cartDropdownContent: `.${classes.cartDropdownContent}`,
     // id'ler için:
     featuredSection: '#featured-section',
     ourProducts: '#our-products',
@@ -151,6 +157,8 @@
     self.buildHTML();
     self.setEvents();
     self.initSwipers();
+    self.initFancybox();
+    self.initCartDropdown();
     self.apiRequest();
   };
 
@@ -166,6 +174,7 @@
               #container {
                 font-family: 'Inter', sans-serif;
                 color: #000427;
+                position: relative;
               }
 
               #container h2{
@@ -670,6 +679,7 @@
               }
 
               .cart-panel {
+                display: none;
                 position: fixed;
                 top: 0;
                 right: 0;
@@ -678,14 +688,8 @@
                 background: #fff;
                 box-shadow: -2px 0 16px rgba(0,0,0,0.08);
                 z-index: 9999;
-                transform: translateX(100%);
                 transition: transform 0.3s cubic-bezier(.4,0,.2,1);
-                display: flex;
                 flex-direction: column;
-              }
-
-              .cart-panel.open {
-                transform: translateX(0);
               }
 
               .cart-panel-header {
@@ -710,6 +714,42 @@
                 flex: 1;
                 padding: 20px;
                 overflow-y: auto;
+              }
+
+              .cart-dropdown {
+                position: absolute;
+                top: 100%;
+                right: 0;
+                width: 300px;
+                background: #fff;
+                border-radius: 8px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+                z-index: 1000;
+                display: none;
+                margin-top: 10px;
+              }
+
+              .cart-dropdown.show {
+                display: block;
+              }
+
+              .cart-dropdown-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 15px 20px;
+                border-bottom: 1px solid #eee;
+                font-weight: 600;
+              }
+
+              .cart-dropdown-content {
+                padding: 20px;
+                max-height: 300px;
+                overflow-y: auto;
+              }
+
+              .product-actions .cart {
+                position: relative;
               }
 
               @media (max-width: 1400px) {
@@ -778,9 +818,18 @@
             </button>
           </div>
           <div class="${classes.productActions}">
-            <div class="${classes.action} ${classes.cart}">
+            <div id="cartBtn" class="${classes.action} ${classes.cart}">
               <i class="fa-solid fa-cart-shopping"></i>
               <span>Cart</span>
+              <div id="cartDropdown" class="${classes.cartDropdown}">
+                <div class="${classes.cartDropdownHeader}">
+                  <span>My Cart</span>
+                  <button class="${classes.cartCloseBtn}">&times;</button>
+                </div>
+                <div class="${classes.cartDropdownContent}">
+                  <p>Your cart is empty.</p>
+                </div>
+              </div>
             </div>
             <div class="${classes.action} ${classes.favs}">
               <i class="fa-solid fa-heart"></i>
@@ -1161,13 +1210,24 @@
     }
   };
 
+  self.initCartDropdown = () => {
+    $('#cartBtn').click(function (e) {
+      e.stopPropagation();
+      $(selectors.cartDropdown).toggleClass('show');
+    });
+  };
+
+  self.initFancybox = () => {
+    if (typeof Fancybox !== 'undefined') {
+      Fancybox.bind('[data-fancybox]', {});
+    }
+  };
+
   // Event listeners
   self.setEvents = () => {
-    // Favorite cart event, etc.
-
     //hover
     $(
-      `.${classes.cart}, .${classes.favs}, .${classes.addcartBtn}, .${classes.addfavBtn}, .${classes.contact} a, .${classes.swiperButtonNext}, .${classes.swiperButtonPrev}`
+      `.${classes.favs}, .${classes.addcartBtn}, .${classes.addfavBtn}, .${classes.contact} a, .${classes.swiperButtonNext}, .${classes.swiperButtonPrev}`
     )
       .mouseenter(function () {
         $(this).addClass('hover-effect');
@@ -1175,9 +1235,22 @@
       .mouseleave(function () {
         $(this).removeClass('hover-effect');
       });
+
+    //cart dropdown
+    // Dışarı tıklayınca kapat
+    $(document).click(function (e) {
+      if (!$(e.target).closest('#cartBtn').length) {
+        $(selectors.cartDropdown).removeClass('show');
+      }
+    });
+
+    // Kapatma butonuna tıklayınca kapat
+    $(selectors.cartCloseBtn).click(function () {
+      $(selectors.cartDropdown).removeClass('show');
+    });
   };
 
-  // Extra functions (localStorage, api requests, etc.)
+  // api request
   self.apiRequest = () => {
     $(document).ready(function () {
       //AJAX product api get
