@@ -163,12 +163,11 @@
     self.addCDNLinks();
     self.buildCSS();
     self.buildHTML();
-    self.setEvents();
     self.initSwipers();
     self.initFancybox();
-    self.initCartDropdown();
-    self.initFavsDropdown();
     self.apiRequest();
+    self.cartDropdownEvents();
+    self.setEvents();
   };
 
   self.reset = () => {
@@ -797,6 +796,7 @@
                 overflow-y: auto;
               }
 
+              .cart-close-btn,
               .favs-close-btn {
                 background: none;
                 border: none;
@@ -877,7 +877,7 @@
               <div id="cartDropdown" class="${classes.cartDropdown}">
                 <div class="${classes.cartDropdownHeader}">
                   <span>My Cart</span>
-                  <button class="${classes.cartCloseBtn}">&times;</button>
+                  <button id="closeCartDropdown" class="${classes.cartCloseBtn}">&times;</button>
                 </div>
                 <div class="${classes.cartDropdownContent}">
                   <p>Your cart is empty.</p>
@@ -889,7 +889,7 @@
               <div id="favsDropdown" class="${classes.favsDropdown}">
                 <div class="${classes.favsDropdownHeader}">
                   <span>My Favorites</span>
-                  <button class="${classes.favsCloseBtn}">&times;</button>
+                  <button id="closeFavsDropdown" class="${classes.favsCloseBtn}">&times;</button>
                 </div>
                 <div class="${classes.favsDropdownContent}">
                   <p>Your favorites list is empty.</p>
@@ -1272,25 +1272,58 @@
     }
   };
 
-  self.initCartDropdown = () => {
-    $('#cartBtn').click(function (e) {
-      e.stopPropagation();
-      $(selectors.cartDropdown).toggleClass('show');
-    });
-  };
-
-  self.initFavsDropdown = () => {
-    $('#favsBtn').click(function (e) {
-      e.stopPropagation();
-      $(selectors.favsDropdown).toggleClass('show');
-    });
-  };
 
   self.initFancybox = () => {
     if (typeof Fancybox !== 'undefined') {
       Fancybox.bind('[data-fancybox]', {});
     }
   };
+
+  self.cartDropdownEvents = () => {
+    //cart dropdown
+    $('#cartBtn').click(function () {
+      $(selectors.cartDropdown).toggleClass('show');
+    });
+
+    //cart dropdown içine tıklayınca kapanmasın
+    $(selectors.cartDropdown).click(function (e) {
+      e.stopPropagation();
+    });
+
+    //cart close btn
+    $('#closeCartDropdown').click(function (e) {
+      e.stopPropagation();
+      $(selectors.cartDropdown).removeClass('show');
+    });
+
+    $(document).click(function (e) {
+      if (!$(e.target).closest('#cartBtn').length) {
+        $(selectors.cartDropdown).removeClass('show');
+      }
+    });
+
+    //favs dropdown
+    $('#favsBtn').click(function () {
+      $(selectors.favsDropdown).toggleClass('show');
+    });
+
+    //favs dropdown içine tıklayınca kapanmasın
+    $(selectors.favsDropdown).click(function (e) {
+      e.stopPropagation();
+    });
+
+    //favs close btn
+    $('#closeFavsDropdown').click(function (e) {
+      e.stopPropagation();
+      $(selectors.favsDropdown).removeClass('show');
+    });
+
+    $(document).click(function (e) {
+      if (!$(e.target).closest('#favsBtn').length) {
+        $(selectors.favsDropdown).removeClass('show');
+      }
+    });
+  }
 
   // Event listeners
   self.setEvents = () => {
@@ -1305,31 +1338,7 @@
         $(this).removeClass('hover-effect');
       });
 
-    //cart dropdown
-    // Dışarı tıklayınca kapat
-    $(document).click(function (e) {
-      if (!$(e.target).closest('#cartBtn').length) {
-        $(selectors.cartDropdown).removeClass('show');
-      }
-    });
-
-    // Kapatma butonuna tıklayınca kapat
-    $(selectors.cartCloseBtn).click(function () {
-      $(selectors.cartDropdown).removeClass('show');
-    });
-
-    //favs dropdown
-    // Dışarı tıklayınca kapat
-    $(document).click(function (e) {
-      if (!$(e.target).closest('#favsBtn').length) {
-        $(selectors.favsDropdown).removeClass('show');
-      }
-    });
-
-    // Kapatma butonuna tıklayınca kapat
-    $(selectors.favsCloseBtn).click(function () {
-      $(selectors.favsDropdown).removeClass('show');
-    });
+    
   };
 
   // api request
