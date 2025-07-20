@@ -158,15 +158,19 @@
 
   const self = {};
 
-  self.init = () => {
+  self.init = async () => {
     self.reset();
     self.addCDNLinks();
     self.buildCSS();
     self.buildHTML();
+
+    //api bekle
+    await self.apiRequest();
+
+    //tamamlanınca devam et
     self.initSwipers();
     self.initFancybox();
-    self.apiRequest();
-    self.cartDropdownEvents();
+    self.dropdownEvents();
     self.setEvents();
   };
 
@@ -1162,6 +1166,12 @@
       'https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0/dist/fancybox/fancybox.css',
     ];
 
+    const jsLinks = [
+      //jquery codetour'da ekli olduğu için script'i eklemedim
+      'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js',
+      'https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0/dist/fancybox/fancybox.umd.js',
+    ];
+
     //link ve preconnect ayrımı
     cssLinks.forEach((href) => {
       if (
@@ -1205,17 +1215,12 @@
       }
     });
 
-    const jsLinks = [
-      //jquery codetour'da ekli olduğu için script'i eklemedim
-      'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js',
-      'https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0/dist/fancybox/fancybox.umd.js',
-    ];
     jsLinks.forEach((src) => {
-      if (!$('head script').filter((_, script) => script.src === src).length) {
+      if (!$('script[src*="swiper-bundle.min.js"]').filter((_, script) => script.src === src).length) {
         const $script = $('<script>', {
           src: src,
         });
-        $('head').append($script);
+        $('body').append($script);
       }
     });
   };
@@ -1279,7 +1284,7 @@
     }
   };
 
-  self.cartDropdownEvents = () => {
+  self.dropdownEvents = () => {
     //cart dropdown
     $('#cartBtn').click(function () {
       $(selectors.cartDropdown).toggleClass('show');
@@ -1329,7 +1334,7 @@
   self.setEvents = () => {
     //hover
     $(
-      `${classes.addcartBtn}, .${classes.addfavBtn}, .${classes.contact} a, .${classes.swiperButtonNext}, .${classes.swiperButtonPrev}`
+      `.${classes.addcartBtn}, .${classes.addfavBtn}, .${classes.contact} a, .${classes.swiperButtonNext}, .${classes.swiperButtonPrev}`
     )
       .mouseenter(function () {
         $(this).addClass('hover-effect');
@@ -1343,7 +1348,7 @@
 
   // api request
   self.apiRequest = () => {
-    $(document).ready(function () {
+    return new Promise((resolve, reject) => {
       //AJAX product api get
       $.ajax({
         url: 'https://fakestoreapi.com/products',
@@ -1386,6 +1391,7 @@
             </div>`;
 
             $('#productList').append(productCard);
+            
           });
 
           const shuffleData = datas.sort(() => Math.random() - 0.5);
@@ -1428,9 +1434,11 @@
 
             $('#product-carousel .swiper-wrapper').append(productCard);
           });
+          resolve(datas);
         })
         .fail(function (xhr, status, error) {
           console.log(xhr, status, error);
+          reject(error);
         });
     });
   };
