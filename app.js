@@ -4,7 +4,6 @@
 
   const classes = {
     style: 'custom-style',
-    style: 'custom-style',
     container: 'container',
     headerContainer: 'header-container',
     headerContent: 'header-content',
@@ -63,11 +62,13 @@
     phone: 'phone',
     github: 'github',
     linkedin: 'linkedin',
+    cartPanel: 'cart-panel',
+    cartPanelHeader: 'cart-panel-header',
+    cartCloseBtn: 'cart-close-btn',
+    cartPanelContent: 'cart-panel-content',
   };
 
   const selectors = {
-    style: `.${classes.style}`,
-    appendLocation: '#container', // Append location for the HTML - Don't change this.
     style: `.${classes.style}`,
     appendLocation: '#container', // Append location for the HTML - Don't change this.
     container: `.${classes.container}`,
@@ -128,6 +129,10 @@
     phone: `.${classes.phone}`,
     github: `.${classes.github}`,
     linkedin: `.${classes.linkedin}`,
+    cartPanel: `.${classes.cartPanel}`,
+    cartPanelHeader: `.${classes.cartPanelHeader}`,
+    cartCloseBtn: `.${classes.cartCloseBtn}`,
+    cartPanelContent: `.${classes.cartPanelContent}`,
     // id'ler için:
     featuredSection: '#featured-section',
     ourProducts: '#our-products',
@@ -664,6 +669,49 @@
                 margin-right: 10px;
               }
 
+              .cart-panel {
+                position: fixed;
+                top: 0;
+                right: 0;
+                width: 350px;
+                height: 100vh;
+                background: #fff;
+                box-shadow: -2px 0 16px rgba(0,0,0,0.08);
+                z-index: 9999;
+                transform: translateX(100%);
+                transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+                display: flex;
+                flex-direction: column;
+              }
+
+              .cart-panel.open {
+                transform: translateX(0);
+              }
+
+              .cart-panel-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 20px;
+                border-bottom: 1px solid #eee;
+                font-size: 1.2rem;
+                font-weight: 600;
+              }
+
+              .cart-close-btn {
+                background: none;
+                border: none;
+                font-size: 2rem;
+                color: #029fae;
+                cursor: pointer;
+              }
+
+              .cart-panel-content {
+                flex: 1;
+                padding: 20px;
+                overflow-y: auto;
+              }
+
               @media (max-width: 1400px) {
                 .container {
                   max-width: 950px;
@@ -942,6 +990,16 @@
           </div>
         </div>
       </section>
+      <div id="cartPanel" class="${classes.cartPanel}">
+        <div class="${classes.cartPanelHeader}">
+          <span>My Cart</span>
+          <button id="closeCart" class="${classes.cartCloseBtn}">&times;</button>
+        </div>
+        <div class="${classes.cartPanelContent}">
+          <!-- Sepet ürünleri buraya gelecek -->
+          <p>Your cart is empty.</p>
+        </div>
+      </div>
     </main>
 
     <footer id="footer">
@@ -990,6 +1048,7 @@
       'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap',
       'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css',
       'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css',
+      'https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0/dist/fancybox/fancybox.css',
     ];
 
     //link ve preconnect ayrımı
@@ -1038,6 +1097,7 @@
     const jsLinks = [
       //jquery codetour'da ekli olduğu için script'i eklemedim
       'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js',
+      'https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0/dist/fancybox/fancybox.umd.js',
     ];
     jsLinks.forEach((src) => {
       if (!$('head script').filter((_, script) => script.src === src).length) {
@@ -1210,7 +1270,6 @@
         });
     });
   };
-
 
   $(document).ready(self.init);
 })(jQuery);
