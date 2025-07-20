@@ -340,6 +340,11 @@
                 margin-top: 120px;
               }
 
+              #product-carousel .swiper-slide{
+                display: flex;
+                justify-content: center;
+              }
+
               .featured-header {
                 display: flex;
                 align-items: center;
@@ -806,40 +811,7 @@
             <div class="${classes.swiper} second-swiper">
               <!-- Additional required wrapper -->
               <div class="${classes.swiperWrapper}">
-                <!-- Slides -->
-                <div class="${classes.swiperSlide}">
-                  <div class="${classes.productCard}">
-                    <div class="${classes.productImage}">
-                      <img src="https://picsum.photos/200/300" alt="" />
-                      <span class="${classes.badge}">New</span>
-                      <button class="${classes.addfavBtn}">
-                        <i class="fa-regular fa-heart"></i>
-                      </button>
-                    </div>
-                    <div class="${classes.productBody}">
-                      <div class="${classes.productInfo}">
-                        <p class="${classes.productName}">Library Stool Chair</p>
-                        <div class="${classes.review}">
-                          <div class="${classes.stars}">
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                          </div>
-                          <span>(50)</span>
-                        </div>
-
-                        <p class="${classes.productPrice}">$20</p>
-                      </div>
-
-                      <button class="${classes.addcartBtn}">
-                        <i class="fa-solid fa-cart-plus"></i>
-                        <span>Add to Cart</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                <!-- ürün carouselindeki ürünler buraya gelecek -->           
               </div>
             </div>
           </div>
@@ -1086,14 +1058,15 @@
       });
       //Second
       new Swiper('.second-swiper', {
-        slidesPerView: 3,
+        slidesPerView: 4,
         spaceBetween: 30,
         navigation: {
           nextEl: '.second-swiper-arrow.swiper-button-next',
           prevEl: '.second-swiper-arrow.swiper-button-prev',
         },
         breakpoints: {
-          1024: { slidesPerView: 3 },
+          1400: { slidesPerView: 4 },
+          1200: { slidesPerView: 3 },
           768: { slidesPerView: 2 },
           480: { slidesPerView: 1 },
         },
@@ -1181,6 +1154,47 @@
             </div>`;
 
             $('#productList').append(productCard);
+          });
+
+          const shuffleData = datas.sort(() => Math.random() - 0.5);
+          const randomData = shuffleData.slice(0, 6);
+          randomData.forEach((data) => {
+            const productCard = `
+            <div class="${classes.swiperSlide}">
+              <div class="${classes.productCard}">
+                <div class="${classes.productImage}">
+                  <img src="${data.image}" alt="" />
+                  <span class="${classes.badge}">New</span>
+                  <button class="${classes.addfavBtn}">
+                    <i class="fa-regular fa-heart"></i>
+                  </button>
+                </div>
+                <div class="${classes.productBody}">
+                  <div class="${classes.productInfo}">
+                    <p class="${classes.productName}">${data.title}</p>
+                    <div class="${classes.review}">
+                      <div class="${classes.stars}">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                      </div>
+                      <span>(${data.rating.count})</span>
+                    </div>
+
+                    <p class="${classes.productPrice}">${data.price} ₺</p>
+                  </div>
+
+                  <button class="${classes.addcartBtn}">
+                    <i class="fa-solid fa-cart-plus"></i>
+                    <span>Add to Cart</span>
+                  </button>
+                </div>
+              </div>
+            </div>`;
+
+            $('#product-carousel .swiper-wrapper').append(productCard);
           });
         })
         .fail(function (xhr, status, error) {
