@@ -146,7 +146,7 @@
     self.buildHTML();
     self.setEvents();
     self.initSwipers();
-    self.setCartStorage();
+    self.apiRequest();
   };
 
   self.reset = () => {
@@ -1118,7 +1118,7 @@
   };
 
   // Extra functions (localStorage, api requests, etc.)
-  self.setCartStorage = () => {
+  self.apiRequest = () => {
     $(document).ready(function () {
       //AJAX product api get
       $.ajax({
@@ -1128,7 +1128,7 @@
       })
         .done(function (datas) {
           datas.forEach((data) => {
-            const productCard = `
+            const productCard = ` 
           <div class="${classes.productCard}">
             <div class="${classes.productImage}">
               <img src="${data.image}" alt="" />
@@ -1211,7 +1211,6 @@
     });
   };
 
-  self.setFavoritesStorage = () => {};
 
   $(document).ready(self.init);
 })(jQuery);
