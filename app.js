@@ -69,6 +69,10 @@
     cartDropdown: 'cart-dropdown',
     cartDropdownHeader: 'cart-dropdown-header',
     cartDropdownContent: 'cart-dropdown-content',
+    favsDropdown: 'favs-dropdown',
+    favsDropdownHeader: 'favs-dropdown-header',
+    favsDropdownContent: 'favs-dropdown-content',
+    favsCloseBtn: 'favs-close-btn',
   };
 
   const selectors = {
@@ -139,6 +143,10 @@
     cartDropdown: `.${classes.cartDropdown}`,
     cartDropdownHeader: `.${classes.cartDropdownHeader}`,
     cartDropdownContent: `.${classes.cartDropdownContent}`,
+    favsDropdown: `.${classes.favsDropdown}`,
+    favsDropdownHeader: `.${classes.favsDropdownHeader}`,
+    favsDropdownContent: `.${classes.favsDropdownContent}`,
+    favsCloseBtn: `.${classes.favsCloseBtn}`,
     // id'ler için:
     featuredSection: '#featured-section',
     ourProducts: '#our-products',
@@ -159,6 +167,7 @@
     self.initSwipers();
     self.initFancybox();
     self.initCartDropdown();
+    self.initFavsDropdown();
     self.apiRequest();
   };
 
@@ -752,6 +761,50 @@
                 position: relative;
               }
 
+              .product-actions .favs {
+                position: relative;
+              }
+
+              .favs-dropdown {
+                position: absolute;
+                top: 100%;
+                right: 0;
+                width: 300px;
+                background: #fff;
+                border-radius: 8px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+                z-index: 1000;
+                display: none;
+                margin-top: 10px;
+              }
+
+              .favs-dropdown.show {
+                display: block;
+              }
+
+              .favs-dropdown-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 15px 20px;
+                border-bottom: 1px solid #eee;
+                font-weight: 600;
+              }
+
+              .favs-dropdown-content {
+                padding: 20px;
+                max-height: 300px;
+                overflow-y: auto;
+              }
+
+              .favs-close-btn {
+                background: none;
+                border: none;
+                font-size: 2rem;
+                color: #029fae;
+                cursor: pointer;
+              }
+
               @media (max-width: 1400px) {
                 .container {
                   max-width: 950px;
@@ -831,8 +884,17 @@
                 </div>
               </div>
             </div>
-            <div class="${classes.action} ${classes.favs}">
+            <div id="favsBtn" class="${classes.action} ${classes.favs}">
               <i class="fa-solid fa-heart"></i>
+              <div id="favsDropdown" class="${classes.favsDropdown}">
+                <div class="${classes.favsDropdownHeader}">
+                  <span>My Favorites</span>
+                  <button class="${classes.favsCloseBtn}">&times;</button>
+                </div>
+                <div class="${classes.favsDropdownContent}">
+                  <p>Your favorites list is empty.</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1217,6 +1279,13 @@
     });
   };
 
+  self.initFavsDropdown = () => {
+    $('#favsBtn').click(function (e) {
+      e.stopPropagation();
+      $(selectors.favsDropdown).toggleClass('show');
+    });
+  };
+
   self.initFancybox = () => {
     if (typeof Fancybox !== 'undefined') {
       Fancybox.bind('[data-fancybox]', {});
@@ -1227,7 +1296,7 @@
   self.setEvents = () => {
     //hover
     $(
-      `.${classes.favs}, .${classes.addcartBtn}, .${classes.addfavBtn}, .${classes.contact} a, .${classes.swiperButtonNext}, .${classes.swiperButtonPrev}`
+      `${classes.addcartBtn}, .${classes.addfavBtn}, .${classes.contact} a, .${classes.swiperButtonNext}, .${classes.swiperButtonPrev}`
     )
       .mouseenter(function () {
         $(this).addClass('hover-effect');
@@ -1247,6 +1316,19 @@
     // Kapatma butonuna tıklayınca kapat
     $(selectors.cartCloseBtn).click(function () {
       $(selectors.cartDropdown).removeClass('show');
+    });
+
+    //favs dropdown
+    // Dışarı tıklayınca kapat
+    $(document).click(function (e) {
+      if (!$(e.target).closest('#favsBtn').length) {
+        $(selectors.favsDropdown).removeClass('show');
+      }
+    });
+
+    // Kapatma butonuna tıklayınca kapat
+    $(selectors.favsCloseBtn).click(function () {
+      $(selectors.favsDropdown).removeClass('show');
     });
   };
 
