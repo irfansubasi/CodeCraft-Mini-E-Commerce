@@ -145,6 +145,7 @@
     self.buildCSS();
     self.buildHTML();
     self.setEvents();
+    self.initSwipers();
   };
 
   self.reset = () => {
@@ -1401,6 +1402,57 @@
         $('head').append($script);
       }
     });
+  };
+
+  //SWIPER
+  self.initSwipers = () => {
+    //First
+    if (typeof Swiper !== 'undefined') {
+      new Swiper(`.${classes.firstSwiper}`, {
+        loop: true,
+        pagination: {
+          el: `.${classes.swiperPagination}`,
+          clickable: true,
+        },
+        navigation: {
+          nextEl: `.${classes.swiperButtonNext}`,
+          prevEl: `.${classes.swiperButtonPrev}`,
+        },
+      });
+      //Second
+      new Swiper('.second-swiper', {
+        slidesPerView: 3,
+        spaceBetween: 30,
+        navigation: {
+          nextEl: '.second-swiper-arrow.swiper-button-next',
+          prevEl: '.second-swiper-arrow.swiper-button-prev',
+        },
+        breakpoints: {
+          1024: { slidesPerView: 3 },
+          768: { slidesPerView: 2 },
+          480: { slidesPerView: 1 },
+        },
+      });
+      //Third
+      new Swiper('.third-swiper', {
+        slidesPerView: 2,
+        spaceBetween: 30,
+        navigation: {
+          nextEl: '.third-swiper-arrow.swiper-button-next',
+          prevEl: '.third-swiper-arrow.swiper-button-prev',
+        },
+        breakpoints: {
+          1024: { slidesPerView: 2 },
+          768: { slidesPerView: 1 },
+        },
+      });
+    } else {
+      // Swiper hemen yüklenmeyebiliyor. bı yüzden script yüklenince başlatıyorum eğer yüklenmemişse
+      const swiperScript = $('script[src*="swiper-bundle.min.js"]');
+      if (swiperScript.length) {
+        swiperScript.on('load', () => self.initSwipers());
+      }
+    }
   };
 
   // Event listeners
