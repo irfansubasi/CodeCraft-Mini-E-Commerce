@@ -406,6 +406,7 @@
                 box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
                 padding: 30px 50px;
                 gap: 30px;
+                z-index: 50;
               }
 
               .feature {
@@ -1267,9 +1268,9 @@
               <!-- Additional required wrapper -->
               <div class="${classes.swiperWrapper}">
                 <!-- Slides -->
-                <div class="${classes.swiperSlide}">Slide 1</div>
-                <div class="${classes.swiperSlide}">Slide 2</div>
-                <div class="${classes.swiperSlide}">Slide 3</div>
+                <div class="${classes.swiperSlide}"><img src="https://placehold.co/900x400?text=Slide+1" alt="Slide 1" style="width:100%;height:100%;object-fit:cover;border-radius:16px;"></div>
+                <div class="${classes.swiperSlide}"><img src="https://placehold.co/900x400?text=Slide+2" alt="Slide 2" style="width:100%;height:100%;object-fit:cover;border-radius:16px;"></div>
+                <div class="${classes.swiperSlide}"><img src="https://placehold.co/900x400?text=Slide+3" alt="Slide 3" style="width:100%;height:100%;object-fit:cover;border-radius:16px;"></div>
                 ...
               </div>
               <!-- If we need pagination -->
@@ -1512,7 +1513,7 @@
     ];
 
     const jsLinks = [
-      //jquery codetour'da ekli olduğu için script'i eklemedim
+      'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js',
       'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js',
       'https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0/dist/fancybox/fancybox.umd.js',
       'https://code.jquery.com/ui/1.13.2/jquery-ui.min.js'
@@ -1562,7 +1563,9 @@
     });
 
     jsLinks.forEach((src) => {
-      if (!$('script[src*="swiper-bundle.min.js"]').filter((_, script) => script.src === src).length) {
+      // jQuery'nin birden fazla eklenmemesi için kontrol
+      if (src.includes('jquery') && window.jQuery) return;
+      if (!$('script[src*="' + src.split('/').pop() + '"]').filter((_, script) => script.src === src).length) {
         const $script = $('<script>', {
           src: src,
         });
