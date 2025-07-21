@@ -1149,6 +1149,13 @@
               #container #product-dialog .product-desc {
                 color: #666;
               }
+
+              .star-filled {
+                color: #FFD600 !important;
+              }
+              .star-empty {
+                color: #c0c0c0 !important;
+              }
             </style>
         `;
     $('head').append(customStyle);
@@ -1656,6 +1663,21 @@
 
   }
 
+
+  //yıldızlar
+  function getRandomStars() {
+    const filled = Math.floor(Math.random() * 5) + 1;
+    let stars = '';
+    for (let i = 0; i < 5; i++) {
+      if (i < filled) {
+        stars += '<i class="fa-solid fa-star star-filled"></i>';
+      } else {
+        stars += '<i class="fa-solid fa-star star-empty"></i>';
+      }
+    }
+    return stars;
+  }
+
   // Event listeners
   self.setEvents = () => {
 
@@ -1986,13 +2008,17 @@
         dataType: 'json',
       })
         .done(function (datas) {
+          //her ürün için rastgele isNew ata
+          datas.forEach((data) => {
+            data.isNew = Math.random() < 0.3; //%30 olasılıkla new
+          });
           self.allProducts = datas;
           datas.forEach((data) => {
             const productCard = ` 
           <div class="${classes.productCard}">
             <div class="${classes.productImage}">
               <img src="${data.image}" alt="" />
-              <span class="${classes.badge}">New</span>
+              ${data.isNew ? `<span class="${classes.badge}">New</span>` : ''}
               <button class="${classes.addfavBtn}">
                 <i class="fa-regular fa-heart"></i>
               </button>
@@ -2002,11 +2028,7 @@
                 <p class="${classes.productName}">${data.title}</p>
                 <div class="${classes.review}">
                   <div class="${classes.stars}">
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
+                    ${getRandomStars()}
                   </div>
                   <span>(${data.rating.count})</span>
                 </div>
@@ -2033,7 +2055,7 @@
               <div class="${classes.productCard}">
                 <div class="${classes.productImage}">
                   <img src="${data.image}" alt="" />
-                  <span class="${classes.badge}">New</span>
+                  ${data.isNew ? `<span class="${classes.badge}">New</span>` : ''}
                   <button class="${classes.addfavBtn}">
                     <i class="fa-regular fa-heart"></i>
                   </button>
@@ -2043,11 +2065,7 @@
                     <p class="${classes.productName}">${data.title}</p>
                     <div class="${classes.review}">
                       <div class="${classes.stars}">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
+                        ${getRandomStars()}
                       </div>
                       <span>(${data.rating.count})</span>
                     </div>
@@ -2154,7 +2172,7 @@
         <div class="${classes.productCard}" data-description="${data.description}">
           <div class="${classes.productImage}">
             <img src="${data.image}" alt="" />
-            <span class="${classes.badge}">New</span>
+            ${data.isNew ? `<span class="${classes.badge}">New</span>` : ''}
             <button class="${classes.addfavBtn}">
               <i class="fa-regular fa-heart"></i>
             </button>
@@ -2164,11 +2182,7 @@
               <p class="${classes.productName}">${data.title}</p>
               <div class="${classes.review}">
                 <div class="${classes.stars}">
-                  <i class="fa-solid fa-star"></i>
-                  <i class="fa-solid fa-star"></i>
-                  <i class="fa-solid fa-star"></i>
-                  <i class="fa-solid fa-star"></i>
-                  <i class="fa-solid fa-star"></i>
+                  ${getRandomStars()}
                 </div>
                 <span>(${data.rating.count})</span>
               </div>
