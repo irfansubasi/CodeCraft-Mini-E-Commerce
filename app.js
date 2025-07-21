@@ -1032,6 +1032,10 @@
                 background: #027a85;
               }
 
+              .addfav-btn.favorited i {
+                color: #029fae !important;
+              }
+
 
               @media (max-width: 1400px) {
                 .container {
@@ -1603,16 +1607,36 @@
       });
       if (found) {
         updateTotalPrice();
-        return;
+      } else {
+        let newProduct = $(selectors.cartProduct + '[style*="display: none"]').clone();
+        newProduct.find(`.${classes.cartProductImage}`).find('img').attr('src', productImage);
+        newProduct.find(`.${classes.cartProductName}`).text(productName);
+        newProduct.find(`.${classes.cartProductPrice}`).text(productPrice);
+        newProduct.css('display', 'flex');
+        $(selectors.cartProductList).append(newProduct);
+        updateTotalPrice();
       }
-
-      let newProduct = $(selectors.cartProduct + '[style*="display: none"]').clone();
-      newProduct.find(`.${classes.cartProductImage}`).find('img').attr('src', productImage);
-      newProduct.find(`.${classes.cartProductName}`).text(productName);
-      newProduct.find(`.${classes.cartProductPrice}`).text(productPrice);
-      newProduct.css('display', 'flex');
-      $(selectors.cartProductList).append(newProduct);
-      updateTotalPrice();
+      //sepete eklenince favorilerden çıkar
+      $(selectors.favsDropdownContent).find(selectors.favProduct).each(function() {
+        if (
+          $(this).find(selectors.favProductName).text() === productName &&
+          $(this).find(selectors.favProductPrice).text() === productPrice &&
+          $(this).css('display') !== 'none'
+        ) {
+          $(this).remove();
+        }
+      });
+      //ğrün kartındaki kalp ikonunu eski haline döndür
+      $(selectors.productCard).each(function() {
+        let $card = $(this);
+        let name = $card.find(`.${classes.productName}`).text();
+        let price = $card.find(`.${classes.productPrice}`).text();
+        if (name === productName && price === productPrice) {
+          let $favBtn = $card.find(`.${classes.addfavBtn}`);
+          $favBtn.removeClass('favorited');
+          $favBtn.find('i').removeClass('fa-solid').addClass('fa-regular');
+        }
+      });
     });
 
     // Miktar artırma/azaltma
@@ -1676,7 +1700,8 @@
     //Favorilere ekle
     $(document).on('click', selectors.addfavBtn, function(e) {
       e.preventDefault();
-      let product = $(this).closest(`.${classes.productCard}`);
+      let $btn = $(this);
+      let product = $btn.closest(`.${classes.productCard}`);
       let productImage = product.find(`.${classes.productImage}`).find('img').attr('src');
       let productName = product.find(`.${classes.productName}`).text();
       let productPrice = product.find(`.${classes.productPrice}`).text();
@@ -1699,12 +1724,28 @@
       favProduct.find(`.${classes.favProductPrice}`).text(productPrice);
       favProduct.css('display', 'flex');
       $(selectors.favsDropdownContent).append(favProduct);
+      $btn.addClass('favorited');
+      $btn.find('i').removeClass('fa-regular').addClass('fa-solid');
     });
 
     //Favoriden sil
     $(document).on('click', selectors.favProductRemoveBtn, function(e) {
       e.preventDefault();
-      $(this).closest(selectors.favProduct).remove();
+      let favProduct = $(this).closest(selectors.favProduct);
+      let productName = favProduct.find(selectors.favProductName).text();
+      let productPrice = favProduct.find(selectors.favProductPrice).text();
+      favProduct.remove();
+      // İlgili ürünün kalp ikonunu eski haline döndür
+      $(selectors.productCard).each(function() {
+        let $card = $(this);
+        let name = $card.find(`.${classes.productName}`).text();
+        let price = $card.find(`.${classes.productPrice}`).text();
+        if (name === productName && price === productPrice) {
+          let $favBtn = $card.find(`.${classes.addfavBtn}`);
+          $favBtn.removeClass('favorited');
+          $favBtn.find('i').removeClass('fa-solid').addClass('fa-regular');
+        }
+      });
     });
 
     //Favoriden sepete ekle
@@ -1731,15 +1772,36 @@
       });
       if (found) {
         updateTotalPrice();
-        return;
+      } else {
+        let newProduct = $(selectors.cartProduct + '[style*="display: none"]').clone();
+        newProduct.find(`.${classes.cartProductImage}`).find('img').attr('src', productImage);
+        newProduct.find(`.${classes.cartProductName}`).text(productName);
+        newProduct.find(`.${classes.cartProductPrice}`).text(productPrice);
+        newProduct.css('display', 'flex');
+        $(selectors.cartProductList).append(newProduct);
+        updateTotalPrice();
       }
-      let newProduct = $(selectors.cartProduct + '[style*="display: none"]').clone();
-      newProduct.find(`.${classes.cartProductImage}`).find('img').attr('src', productImage);
-      newProduct.find(`.${classes.cartProductName}`).text(productName);
-      newProduct.find(`.${classes.cartProductPrice}`).text(productPrice);
-      newProduct.css('display', 'flex');
-      $(selectors.cartProductList).append(newProduct);
-      updateTotalPrice();
+      //sepete eklenince favorilerden çıkar
+      $(selectors.favsDropdownContent).find(selectors.favProduct).each(function() {
+        if (
+          $(this).find(selectors.favProductName).text() === productName &&
+          $(this).find(selectors.favProductPrice).text() === productPrice &&
+          $(this).css('display') !== 'none'
+        ) {
+          $(this).remove();
+        }
+      });
+      //ğrün kartındaki kalp ikonunu eski haline döndür
+      $(selectors.productCard).each(function() {
+        let $card = $(this);
+        let name = $card.find(`.${classes.productName}`).text();
+        let price = $card.find(`.${classes.productPrice}`).text();
+        if (name === productName && price === productPrice) {
+          let $favBtn = $card.find(`.${classes.addfavBtn}`);
+          $favBtn.removeClass('favorited');
+          $favBtn.find('i').removeClass('fa-solid').addClass('fa-regular');
+        }
+      });
     });
     
   };
