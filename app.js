@@ -1082,6 +1082,73 @@
                 }
               }
 
+              #container .ui-dialog {
+                border-radius: 16px !important;
+                box-shadow: 0 8px 32px rgba(2,159,174,0.15), 0 1.5px 8px rgba(0,0,0,0.08) !important;
+                border: none !important;
+                padding: 0 !important;
+                font-family: 'Inter', sans-serif !important;
+                background: #fff !important;
+                position: absolute !important;
+                left: 50% !important;
+                top: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                z-index: 9999 !important;
+                max-width: 90vw;
+                box-sizing: border-box;
+              }
+              #container .ui-dialog-titlebar {
+                background: #029fae !important;
+                color: #fff !important;
+                border: none !important;
+                border-radius: 16px 16px 0 0 !important;
+                font-size: 1.2rem !important;
+                font-weight: 700 !important;
+                padding: 16px 24px !important;
+              }
+              #container .ui-dialog-titlebar-close {
+                border: none !important;
+                color: #fff !important;
+                font-size: 1.3rem !important;
+                right: 12px !important;
+                top: 30px !important;
+              }
+              #container .ui-dialog-content {
+                padding: 24px !important;
+                font-size: 1rem !important;
+                color: #222 !important;
+                background: #fff !important;
+                border-radius: 0 0 16px 16px !important;
+              }
+              #container .ui-widget-overlay {
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                background: rgba(0,0,0,0.8) !important;
+                z-index: 9998 !important;
+              }
+              #container #product-dialog img {
+                border-radius: 10px;
+                margin-bottom: 16px;
+                box-shadow: 0 2px 8px rgba(2,159,174,0.08);
+              }
+              #container #product-dialog .product-name {
+                font-size: 1.1rem;
+                font-weight: 700;
+                margin-bottom: 8px;
+                color: #029fae;
+              }
+              #container #product-dialog .product-price {
+                font-size: 1.1rem;
+                font-weight: 700;
+                color: #029fae;
+                margin-bottom: 8px;
+              }
+              #container #product-dialog .product-desc {
+                color: #666;
+              }
             </style>
         `;
     $('head').append(customStyle);
@@ -1434,12 +1501,14 @@
       'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css',
       'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css',
       'https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0/dist/fancybox/fancybox.css',
+      'https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css'
     ];
 
     const jsLinks = [
       //jquery codetour'da ekli olduğu için script'i eklemedim
       'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js',
       'https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0/dist/fancybox/fancybox.umd.js',
+      'https://code.jquery.com/ui/1.13.2/jquery-ui.min.js'
     ];
 
     //link ve preconnect ayrımı
@@ -1886,6 +1955,24 @@
         }
       });
     });
+
+    //ürün kartına tıklayınca detay modalı aç
+    $(document).on('click', `.${classes.productCard}`, function(e) {
+      //sadece butonlara tıklanmadıysa modal aç
+      if (
+        $(e.target).closest(`.${classes.addcartBtn}, .${classes.addfavBtn}`).length > 0
+      ) {
+        return;
+      }
+      let $card = $(this);
+      let image = $card.find(`.${classes.productImage} img`).attr('src');
+      let name = $card.find(`.${classes.productName}`).text();
+      let price = $card.find(`.${classes.productPrice}`).text();
+      // Açıklamayı self.allProducts'tan bul
+      let product = (self.allProducts || []).find(p => p.title === name && (p.price + ' ₺') === price);
+      let description = product ? product.description : '';
+      showProductDialog({image, name, price, description});
+    });
     
   };
 
@@ -2023,6 +2110,31 @@
       localStorage.removeItem('favorites');
     }
   };
+
+  //ürün detay modalı (jQuery UI Dialog)
+  function showProductDialog({image, name, price, description}) {
+    //önce eski dialogu kaldır
+    $('#container #product-dialog').remove();
+    //modal içeriği
+    $('#container').append(`
+      <div id="product-dialog">
+        <img src="${image}" style="width:100%;border-radius:8px;margin-bottom:16px;" />
+        <div class="product-name" style="font-size:1.1rem;font-weight:700;margin-bottom:8px;color:#029fae;">${name}</div>
+        <div class="product-price" style="font-size:1.1rem;font-weight:700;color:#029fae;margin-bottom:8px;">${price}</div>
+        <div class="product-desc" style="color:#666;">${description}</div>
+      </div>
+    `);
+    //dialogu aç
+    setTimeout(function() {
+      $('#product-dialog').dialog({
+        modal: true,
+        appendTo: '#container',
+        width: 400,
+        title: false,
+        close: function() { $(this).remove(); }
+      });
+    }, 200);
+  }
 
   //debounce fonksiyonu
   function debounce(func, wait) {
