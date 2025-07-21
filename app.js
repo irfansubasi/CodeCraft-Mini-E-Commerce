@@ -199,6 +199,7 @@
   };
 
   const self = {};
+  self.allProducts = [];
 
   self.init = async () => {
     self.reset();
@@ -1816,6 +1817,7 @@
         dataType: 'json',
       })
         .done(function (datas) {
+          self.allProducts = datas;
           datas.forEach((data) => {
             const productCard = ` 
           <div class="${classes.productCard}">
@@ -1902,6 +1904,72 @@
         });
     });
   };
+
+  // Debounce fonksiyonu
+  function debounce(func, wait) {
+    let timeout;
+    return function(...args) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+  }
+
+  // Ürünleri filtreleyip #productList'i güncelle
+  function renderProductList(products) {
+    const $list = $('#productList');
+    $list.empty();
+    products.forEach((data) => {
+      const productCard = ` 
+        <div class="${classes.productCard}" data-description="${data.description}">
+          <div class="${classes.productImage}">
+            <img src="${data.image}" alt="" />
+            <span class="${classes.badge}">New</span>
+            <button class="${classes.addfavBtn}">
+              <i class="fa-regular fa-heart"></i>
+            </button>
+          </div>
+          <div class="${classes.productBody}">
+            <div class="${classes.productInfo}">
+              <p class="${classes.productName}">${data.title}</p>
+              <div class="${classes.review}">
+                <div class="${classes.stars}">
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star"></i>
+                </div>
+                <span>(${data.rating.count})</span>
+              </div>
+              <p class="${classes.productPrice}">${data.price} ₺</p>
+            </div>
+            <button class="${classes.addcartBtn}">
+              <i class="fa-solid fa-cart-plus"></i>
+              <span>Add to Cart</span>
+            </button>
+          </div>
+        </div>`;
+      $list.append(productCard);
+    });
+  }
+
+  //arama kutusu
+  $(document).on('input', '.search-container input', debounce(function() {
+    const val = $(this).val().toLowerCase();
+    if (!val) {
+      renderProductList(self.allProducts);
+      return;
+    }
+    const filtered = self.allProducts.filter(p => p.title.toLowerCase().includes(val));
+    renderProductList(filtered);
+  }, 500));
+
+  //sayfa ilk açıldığında da tüm ürünleri göster
+  $(document).ready(function() {
+    if (self.allProducts && self.allProducts.length) {
+      renderProductList(self.allProducts);
+    }
+  });
 
   $(document).ready(self.init);
 })(jQuery);
