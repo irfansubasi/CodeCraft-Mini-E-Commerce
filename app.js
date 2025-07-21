@@ -921,6 +921,34 @@
                 position: relative;
               }
 
+              .cart-clear-btn {
+                background: #ff4757;
+                color: #fff;
+                border: none;
+                border-radius: 8px;
+                padding: 5px 8px;
+                margin-right: 10px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: background 0.2s;
+              }
+              .cart-clear-btn:hover {
+                background: #ff3742;
+              }
+              .cart-checkout-btn {
+                background: #029fae;
+                color: #fff;
+                border: none;
+                border-radius: 8px;
+                padding: 5px 8px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: background 0.2s;
+              }
+              .cart-checkout-btn:hover {
+                background: #027a85;
+              }
+
 
               @media (max-width: 1400px) {
                 .container {
@@ -1021,7 +1049,6 @@
                     <button class="${classes.cartClearBtn}">Clear Cart</button>
                     <button class="${classes.cartCheckoutBtn}">Checkout</button>
                   </div>
-                  <p>Your cart is empty.</p>
                 </div>
               </div>
             </div>
@@ -1475,7 +1502,6 @@
       newProduct.css('display', 'flex');
 
       $(selectors.cartProductList).append(newProduct);
-      
 
       
       // Total price hesaplama
@@ -1504,6 +1530,7 @@
       e.preventDefault();
       
       $(this).closest('.cart-product').remove();
+
       updateTotalPrice();
     });
     
@@ -1524,6 +1551,20 @@
       $(selectors.cartTotalPrice).text(total.toFixed(2) + ' ₺');
     }
 
+    //cart temizleme
+    $(document).on('click', selectors.cartClearBtn, function(e) {
+      e.preventDefault();
+      $(selectors.cartProductList).find(`.${classes.cartProduct}:not([style*='display: none'])`).remove();
+      updateTotalPrice();
+    });
+
+    // Checkout
+    $(document).on('click', selectors.cartCheckoutBtn, function(e) {
+      e.preventDefault();
+      $(selectors.cartProductList).find(`.${classes.cartProduct}:not([style*='display: none'])`).remove();
+      updateTotalPrice();
+      alert('Checkout is successful!');
+    });
     
   };
 
