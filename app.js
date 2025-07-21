@@ -73,6 +73,16 @@
     favsDropdownHeader: 'favs-dropdown-header',
     favsDropdownContent: 'favs-dropdown-content',
     favsCloseBtn: 'favs-close-btn',
+    cartProduct: 'cart-product',
+    cartProductImage: 'cart-product-image',
+    cartProductInfo: 'cart-product-info',
+    cartProductName: 'cart-product-name',
+    cartProductPrice: 'cart-product-price',
+    cartProductList: 'cart-product-list',
+    cartPriceInfo: 'cart-price-info',
+    cartTotalPrice: 'cart-total-price',
+    cartClearBtn: 'cart-clear-btn',
+    cartCheckoutBtn: 'cart-checkout-btn',
   };
 
   const selectors = {
@@ -147,6 +157,16 @@
     favsDropdownHeader: `.${classes.favsDropdownHeader}`,
     favsDropdownContent: `.${classes.favsDropdownContent}`,
     favsCloseBtn: `.${classes.favsCloseBtn}`,
+    cartProduct: `.${classes.cartProduct}`,
+    cartProductImage: `.${classes.cartProductImage}`,
+    cartProductInfo: `.${classes.cartProductInfo}`,
+    cartProductName: `.${classes.cartProductName}`,
+    cartProductPrice: `.${classes.cartProductPrice}`,
+    cartProductList: `.${classes.cartProductList}`,
+    cartPriceInfo: `.${classes.cartPriceInfo}`,
+    cartTotalPrice: `.${classes.cartTotalPrice}`,
+    cartClearBtn: `.${classes.cartClearBtn}`,
+    cartCheckoutBtn: `.${classes.cartCheckoutBtn}`,
     // id'ler için:
     featuredSection: '#featured-section',
     ourProducts: '#our-products',
@@ -732,7 +752,7 @@
                 position: absolute;
                 top: 100%;
                 right: 0;
-                width: 300px;
+                width: 500px;
                 background: #fff;
                 border-radius: 8px;
                 box-shadow: 0 4px 20px rgba(0,0,0,0.15);
@@ -809,6 +829,41 @@
                 cursor: pointer;
               }
 
+              .cart-product-list{
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+              }
+
+              .cart-product{
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 10px;
+                border-bottom: 1px solid #eee;
+              }
+
+              .cart-product-image{
+                width: 50px;
+                height: 50px;
+                border-radius: 8px;
+                overflow: hidden;
+                flex-shrink: 0;
+              }
+
+              .cart-product-image img{
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+              }
+
+              .cart-product-info{
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+              }
+
+
               @media (max-width: 1400px) {
                 .container {
                   max-width: 950px;
@@ -884,6 +939,22 @@
                   <button id="closeCartDropdown" class="${classes.cartCloseBtn}">&times;</button>
                 </div>
                 <div class="${classes.cartDropdownContent}">
+                  <div class="${classes.cartProductList}">
+                    <div class="${classes.cartProduct}" style="display: none;">
+                      <div class="${classes.cartProductImage}">
+                        <img src="" alt="">
+                      </div>
+                      <div class="${classes.cartProductInfo}">
+                        <p class="${classes.cartProductName}"></p>
+                        <p class="${classes.cartProductPrice}"></p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="${classes.cartPriceInfo}">
+                    <p>Total Price: <span class="${classes.cartTotalPrice}"></span></p>
+                    <button class="${classes.cartClearBtn}">Clear Cart</button>
+                    <button class="${classes.cartCheckoutBtn}">Checkout</button>
+                  </div>
                   <p>Your cart is empty.</p>
                 </div>
               </div>
@@ -1105,16 +1176,6 @@
           </div>
         </div>
       </section>
-      <div id="cartPanel" class="${classes.cartPanel}">
-        <div class="${classes.cartPanelHeader}">
-          <span>My Cart</span>
-          <button id="closeCart" class="${classes.cartCloseBtn}">&times;</button>
-        </div>
-        <div class="${classes.cartPanelContent}">
-          <!-- Sepet ürünleri buraya gelecek -->
-          <p>Your cart is empty.</p>
-        </div>
-      </div>
     </main>
 
     <footer id="footer">
@@ -1332,6 +1393,9 @@
 
   // Event listeners
   self.setEvents = () => {
+
+    
+
     //hover
     $(
       `.${classes.addcartBtn}, .${classes.addfavBtn}, .${classes.contact} a, .${classes.swiperButtonNext}, .${classes.swiperButtonPrev}`
@@ -1343,6 +1407,28 @@
         $(this).removeClass('hover-effect');
       });
 
+
+    //add to cart
+    $(document).on('click', selectors.addcartBtn, function () {
+      let product = $(this).closest(`.${classes.productCard}`);
+      let productImage = product.find(`.${classes.productImage}`).find('img').attr('src');
+      let productName = product.find(`.${classes.productName}`).text();
+      let productPrice = product.find(`.${classes.productPrice}`).text();
+
+      let newProduct = $(selectors.cartProduct + '[style*="display: none"]').clone();
+
+      newProduct.find(`.${classes.cartProductImage}`).find('img').attr('src', productImage);
+      newProduct.find(`.${classes.cartProductName}`).text(productName);
+      newProduct.find(`.${classes.cartProductPrice}`).text(productPrice);
+
+      newProduct.css('display', 'flex');
+
+
+      $(selectors.cartProductList).append(newProduct);
+      
+    });
+
+    
     
   };
 
