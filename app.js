@@ -87,6 +87,13 @@
     cartProductQuantityBtn: 'cart-product-quantity-btn',
     cartProductQuantityValue: 'cart-product-quantity-value',
     cartProductRemoveBtn: 'cart-product-remove-btn',
+    favProduct: 'fav-product',
+    favProductImage: 'fav-product-image',
+    favProductInfo: 'fav-product-info',
+    favProductName: 'fav-product-name',
+    favProductPrice: 'fav-product-price',
+    favProductRemoveBtn: 'fav-product-remove-btn',
+    favProductAddToCartBtn: 'fav-product-addcart-btn',
   };
 
   const selectors = {
@@ -175,6 +182,13 @@
     cartProductQuantityBtn: `.${classes.cartProductQuantityBtn}`,
     cartProductQuantityValue: `.${classes.cartProductQuantityValue}`,
     cartProductRemoveBtn: `.${classes.cartProductRemoveBtn}`,
+    favProduct: `.${classes.favProduct}`,
+    favProductImage: `.${classes.favProductImage}`,
+    favProductInfo: `.${classes.favProductInfo}`,
+    favProductName: `.${classes.favProductName}`,
+    favProductPrice: `.${classes.favProductPrice}`,
+    favProductRemoveBtn: `.${classes.favProductRemoveBtn}`,
+    favProductAddToCartBtn: `.${classes.favProductAddToCartBtn}`,
     // id'ler için:
     featuredSection: '#featured-section',
     ourProducts: '#our-products',
@@ -800,7 +814,7 @@
                 position: absolute;
                 top: 100%;
                 right: 0;
-                width: 300px;
+                width: 500px;
                 background: #fff;
                 border-radius: 8px;
                 box-shadow: 0 4px 20px rgba(0,0,0,0.15);
@@ -949,6 +963,74 @@
                 background: #027a85;
               }
 
+              .fav-product {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 10px;
+                border-bottom: 1px solid #eee;
+                position: relative;
+              }
+              .fav-product-image {
+                width: 40px;
+                height: 40px;
+                border-radius: 8px;
+                overflow: hidden;
+                flex-shrink: 0;
+              }
+              .fav-product-image img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+              }
+              .fav-product-info {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+                flex: 1;
+              }
+              .fav-product-name {
+                font-size: 0.95rem;
+                font-weight: 600;
+                line-height: 1.2;
+              }
+              .fav-product-price {
+                font-size: 0.95rem;
+                color: #029fae;
+                font-weight: 700;
+              }
+              .fav-product-remove-btn {
+                border: none;
+                width: 22px;
+                height: 22px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: absolute;
+                top: 2px;
+                right: 5px;
+              }
+              .fav-product-remove-btn i {
+                color: #fff;
+                font-size: 11px;
+              }
+              .fav-product-addcart-btn {
+                background: #029fae;
+                color: #fff;
+                border: none;
+                border-radius: 6px;
+                padding: 4px 8px;
+                font-size: 0.9rem;
+                font-weight: 600;
+                cursor: pointer;
+                margin-left: 10px;
+                transition: background 0.2s;
+              }
+              .fav-product-addcart-btn:hover {
+                background: #027a85;
+              }
+
 
               @media (max-width: 1400px) {
                 .container {
@@ -1060,7 +1142,15 @@
                   <button id="closeFavsDropdown" class="${classes.favsCloseBtn}">&times;</button>
                 </div>
                 <div class="${classes.favsDropdownContent}">
-                  <p>Your favorites list is empty.</p>
+                  <div class="${classes.favProduct}" style="display: none;">
+                    <div class="${classes.favProductImage}"><img src="" alt=""></div>
+                    <div class="${classes.favProductInfo}">
+                      <p class="${classes.favProductName}"></p>
+                      <p class="${classes.favProductPrice}"></p>
+                    </div>
+                    <button class="${classes.favProductAddToCartBtn}">Sepete Ekle</button>
+                    <button class="${classes.favProductRemoveBtn}"><i class="fa-solid fa-times"></i></button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1564,6 +1654,56 @@
       $(selectors.cartProductList).find(`.${classes.cartProduct}:not([style*='display: none'])`).remove();
       updateTotalPrice();
       alert('Checkout is successful!');
+    });
+    
+    //Favorilere ekle
+    $(document).on('click', selectors.addfavBtn, function(e) {
+      e.preventDefault();
+      let product = $(this).closest(`.${classes.productCard}`);
+      let productImage = product.find(`.${classes.productImage}`).find('img').attr('src');
+      let productName = product.find(`.${classes.productName}`).text();
+      let productPrice = product.find(`.${classes.productPrice}`).text();
+      //Favorilerde var mı kontrol et
+      let exists = false;
+      $(selectors.favsDropdownContent).find(selectors.favProduct).each(function() {
+        if (
+          $(this).find(selectors.favProductName).text() === productName &&
+          $(this).find(selectors.favProductPrice).text() === productPrice &&
+          $(this).css('display') !== 'none'
+        ) {
+          exists = true;
+        }
+      });
+      if (exists) return;
+      // Template'i klonla
+      let favProduct = $(selectors.favProduct + '[style*="display: none"]').clone();
+      favProduct.find(`.${classes.favProductImage} img`).attr('src', productImage);
+      favProduct.find(`.${classes.favProductName}`).text(productName);
+      favProduct.find(`.${classes.favProductPrice}`).text(productPrice);
+      favProduct.css('display', 'flex');
+      $(selectors.favsDropdownContent).append(favProduct);
+    });
+
+    //Favoriden sil
+    $(document).on('click', selectors.favProductRemoveBtn, function(e) {
+      e.preventDefault();
+      $(this).closest(selectors.favProduct).remove();
+    });
+
+    //Favoriden sepete ekle
+    $(document).on('click', selectors.favProductAddToCartBtn, function(e) {
+      e.preventDefault();
+      let favProduct = $(this).closest(selectors.favProduct);
+      let productImage = favProduct.find(selectors.favProductImage).find('img').attr('src');
+      let productName = favProduct.find(selectors.favProductName).text();
+      let productPrice = favProduct.find(selectors.favProductPrice).text();
+      let newProduct = $(selectors.cartProduct + '[style*="display: none"]').clone();
+      newProduct.find(`.${classes.cartProductImage}`).find('img').attr('src', productImage);
+      newProduct.find(`.${classes.cartProductName}`).text(productName);
+      newProduct.find(`.${classes.cartProductPrice}`).text(productPrice);
+      newProduct.css('display', 'flex');
+      $(selectors.cartProductList).append(newProduct);
+      updateTotalPrice();
     });
     
   };
