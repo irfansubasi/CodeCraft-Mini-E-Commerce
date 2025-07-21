@@ -446,6 +446,7 @@
                 justify-content: center;
                 align-items: center;
                 gap: 15px;
+                z-index: 1;
               }
 
               .product-card {
@@ -1532,6 +1533,7 @@
     //cart dropdown
     $('#cartBtn').click(function () {
       $(selectors.cartDropdown).addClass('show');
+      $(selectors.favsDropdown).removeClass('show'); //favoriler açıksa kapat
     });
 
     
@@ -1547,6 +1549,7 @@
     //favs dropdown
     $('#favsBtn').click(function () {
       $(selectors.favsDropdown).addClass('show');
+      $(selectors.cartDropdown).removeClass('show'); //cart açıksa kapat
     });
 
 
@@ -1583,18 +1586,32 @@
       let productName = product.find(`.${classes.productName}`).text();
       let productPrice = product.find(`.${classes.productPrice}`).text();
 
-      let newProduct = $(selectors.cartProduct + '[style*="display: none"]').clone();
+      //sepette aynı ürün var mı kontrol et
+      let found = false;
+      $(selectors.cartProductList).find(`.${classes.cartProduct}`).each(function() {
+        if (
+          $(this).css('display') !== 'none' &&
+          $(this).find(`.${classes.cartProductName}`).text() === productName &&
+          $(this).find(`.${classes.cartProductPrice}`).text() === productPrice
+        ) {
+          // Miktarı artır
+          let quantitySpan = $(this).find(`.${classes.cartProductQuantityValue}`);
+          let currentQuantity = parseInt(quantitySpan.text());
+          quantitySpan.text(currentQuantity + 1);
+          found = true;
+        }
+      });
+      if (found) {
+        updateTotalPrice();
+        return;
+      }
 
+      let newProduct = $(selectors.cartProduct + '[style*="display: none"]').clone();
       newProduct.find(`.${classes.cartProductImage}`).find('img').attr('src', productImage);
       newProduct.find(`.${classes.cartProductName}`).text(productName);
       newProduct.find(`.${classes.cartProductPrice}`).text(productPrice);
-
       newProduct.css('display', 'flex');
-
       $(selectors.cartProductList).append(newProduct);
-
-      
-      // Total price hesaplama
       updateTotalPrice();
     });
 
@@ -1648,7 +1665,7 @@
       updateTotalPrice();
     });
 
-    // Checkout
+    //Checkout
     $(document).on('click', selectors.cartCheckoutBtn, function(e) {
       e.preventDefault();
       $(selectors.cartProductList).find(`.${classes.cartProduct}:not([style*='display: none'])`).remove();
@@ -1697,6 +1714,25 @@
       let productImage = favProduct.find(selectors.favProductImage).find('img').attr('src');
       let productName = favProduct.find(selectors.favProductName).text();
       let productPrice = favProduct.find(selectors.favProductPrice).text();
+      //sepette aynı ürün var mı kontrol et
+      let found = false;
+      $(selectors.cartProductList).find(`.${classes.cartProduct}`).each(function() {
+        if (
+          $(this).css('display') !== 'none' &&
+          $(this).find(`.${classes.cartProductName}`).text() === productName &&
+          $(this).find(`.${classes.cartProductPrice}`).text() === productPrice
+        ) {
+          //miktarı artır
+          let quantitySpan = $(this).find(`.${classes.cartProductQuantityValue}`);
+          let currentQuantity = parseInt(quantitySpan.text());
+          quantitySpan.text(currentQuantity + 1);
+          found = true;
+        }
+      });
+      if (found) {
+        updateTotalPrice();
+        return;
+      }
       let newProduct = $(selectors.cartProduct + '[style*="display: none"]').clone();
       newProduct.find(`.${classes.cartProductImage}`).find('img').attr('src', productImage);
       newProduct.find(`.${classes.cartProductName}`).text(productName);
