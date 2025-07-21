@@ -83,6 +83,10 @@
     cartTotalPrice: 'cart-total-price',
     cartClearBtn: 'cart-clear-btn',
     cartCheckoutBtn: 'cart-checkout-btn',
+    cartProductQuantity: 'cart-product-quantity',
+    cartProductQuantityBtn: 'cart-product-quantity-btn',
+    cartProductQuantityValue: 'cart-product-quantity-value',
+    cartProductRemoveBtn: 'cart-product-remove-btn',
   };
 
   const selectors = {
@@ -167,6 +171,10 @@
     cartTotalPrice: `.${classes.cartTotalPrice}`,
     cartClearBtn: `.${classes.cartClearBtn}`,
     cartCheckoutBtn: `.${classes.cartCheckoutBtn}`,
+    cartProductQuantity: `.${classes.cartProductQuantity}`,
+    cartProductQuantityBtn: `.${classes.cartProductQuantityBtn}`,
+    cartProductQuantityValue: `.${classes.cartProductQuantityValue}`,
+    cartProductRemoveBtn: `.${classes.cartProductRemoveBtn}`,
     // id'ler için:
     featuredSection: '#featured-section',
     ourProducts: '#our-products',
@@ -861,6 +869,56 @@
                 display: flex;
                 flex-direction: column;
                 gap: 5px;
+                flex: 1;
+              }
+
+              .cart-product-quantity {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-top: 5px;
+              }
+
+              .cart-product-quantity-btn {
+                background: #029fae;
+                color: white;
+                border: none;
+                border-radius: 50%;
+                width: 25px;
+                height: 25px;
+                cursor: pointer;
+                font-weight: bold;
+              }
+
+              .cart-product-quantity-btn:hover {
+                background: #027a85;
+              }
+
+              .cart-product-quantity-value {
+                font-weight: bold;
+                min-width: 20px;
+                text-align: center;
+              }
+
+              .cart-product-remove-btn {
+                border: none;
+                width: 25px;
+                height: 25px;
+                cursor: pointer;
+                position: absolute;
+                top: 12px;
+                right: -17px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              }
+
+              .cart-product-remove-btn i {
+                font-size: 12px;
+              }
+
+              .cart-product {
+                position: relative;
               }
 
 
@@ -947,7 +1005,15 @@
                       <div class="${classes.cartProductInfo}">
                         <p class="${classes.cartProductName}"></p>
                         <p class="${classes.cartProductPrice}"></p>
+                        <div class="${classes.cartProductQuantity}">
+                          <button class="${classes.cartProductQuantityBtn}" data-action="decrease">-</button>
+                          <span class="${classes.cartProductQuantityValue}">1</span>
+                          <button class="${classes.cartProductQuantityBtn}" data-action="increase">+</button>
+                        </div>
                       </div>
+                      <button class="${classes.cartProductRemoveBtn}">
+                        <i class="fa-solid fa-times"></i>
+                      </button>
                     </div>
                   </div>
                   <div class="${classes.cartPriceInfo}">
@@ -1348,13 +1414,10 @@
   self.dropdownEvents = () => {
     //cart dropdown
     $('#cartBtn').click(function () {
-      $(selectors.cartDropdown).toggleClass('show');
+      $(selectors.cartDropdown).addClass('show');
     });
 
-    //cart dropdown içine tıklayınca kapanmasın
-    $(selectors.cartDropdown).click(function (e) {
-      e.stopPropagation();
-    });
+    
 
     //cart close btn
     $('#closeCartDropdown').click(function (e) {
@@ -1362,21 +1425,13 @@
       $(selectors.cartDropdown).removeClass('show');
     });
 
-    $(document).click(function (e) {
-      if (!$(e.target).closest('#cartBtn').length) {
-        $(selectors.cartDropdown).removeClass('show');
-      }
-    });
+
 
     //favs dropdown
     $('#favsBtn').click(function () {
-      $(selectors.favsDropdown).toggleClass('show');
+      $(selectors.favsDropdown).addClass('show');
     });
 
-    //favs dropdown içine tıklayınca kapanmasın
-    $(selectors.favsDropdown).click(function (e) {
-      e.stopPropagation();
-    });
 
     //favs close btn
     $('#closeFavsDropdown').click(function (e) {
@@ -1384,11 +1439,7 @@
       $(selectors.favsDropdown).removeClass('show');
     });
 
-    $(document).click(function (e) {
-      if (!$(e.target).closest('#favsBtn').length) {
-        $(selectors.favsDropdown).removeClass('show');
-      }
-    });
+
   }
 
   // Event listeners
@@ -1423,12 +1474,56 @@
 
       newProduct.css('display', 'flex');
 
-
       $(selectors.cartProductList).append(newProduct);
       
+
+      
+      // Total price hesaplama
+      updateTotalPrice();
     });
 
+    // Miktar artırma/azaltma
+    $(document).on('click', selectors.cartProductQuantityBtn, function(e) {
+      e.preventDefault();
+      
+      let quantitySpan = $(this).siblings(`.${classes.cartProductQuantityValue}`);
+      let currentQuantity = parseInt(quantitySpan.text());
+      let action = $(this).data('action');
+      
+      if (action === 'increase') {
+        quantitySpan.text(currentQuantity + 1);
+      } else if (action === 'decrease' && currentQuantity > 1) {
+        quantitySpan.text(currentQuantity - 1);
+      }
+      
+      updateTotalPrice();
+    });
+
+    // Ürün silme
+    $(document).on('click', selectors.cartProductRemoveBtn, function(e) {
+      e.preventDefault();
+      
+      $(this).closest('.cart-product').remove();
+      updateTotalPrice();
+    });
     
+    //toplam fiyat hesaplama
+    function updateTotalPrice() {
+      let total = 0;
+      $(selectors.cartProductList).find(`.${classes.cartProduct}`).each(function() {
+        if ($(this).css('display') !== 'none') {
+          let priceText = $(this).find(`.${classes.cartProductPrice}`).text();
+          let price = parseFloat(priceText.replace('₺', '').trim());
+          let quantity = parseInt($(this).find(`.${classes.cartProductQuantityValue}`).text());
+          if (!isNaN(price) && !isNaN(quantity)) {
+            total += price * quantity;
+          }
+        }
+      });
+      
+      $(selectors.cartTotalPrice).text(total.toFixed(2) + ' ₺');
+    }
+
     
   };
 
